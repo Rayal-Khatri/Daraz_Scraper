@@ -6,7 +6,15 @@
 import scrapy
 
 
-class DarazscraperItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
+class Products(scrapy.Item):
+    name = scrapy.Field()
+    price = scrapy.Field()
+    delivery_price = scrapy.Field()
+    rating = scrapy.Field()
+    no_of_review = scrapy.Field()
+    delivery_price = scrapy.Field()
+    seller = scrapy.Field()
+    seller_rating = scrapy.Field()
+    delivery_rating = scrapy.Field()
+    stock = scrapy.Field()
     pass

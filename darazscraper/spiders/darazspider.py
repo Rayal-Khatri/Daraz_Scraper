@@ -3,8 +3,10 @@ from scrapy_selenium import SeleniumRequest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-import logging
+from ..items import Products
 import time
+from scrapy.selector import Selector 
+
 
 
 class ClientSideSpider(scrapy.Spider):
@@ -45,18 +47,20 @@ class ClientSideSpider(scrapy.Spider):
         # Logging and yielding the scraped data
         # self.logger.info(f'Total items after clicking Load More: {len(title)}')
         # To scrape only 3 items for testing
-        # a = 0
-        items =  response.css('a.flash-unit-a')
-        print("**************************************************************"+ str(len(items))+ "********************************************************")
-        for item in response.css('a.flash-unit-a'):
+        a = 0
+        current_html = driver.page_source
+        current_page_selector = Selector(text=current_html)
+        items =  current_page_selector.css('a.flash-unit-a')
+        print("************************************************************** TOTAL ITEMS ="+ str(len(items))+ "********************************************************")
+        for item in items:
             next_url = "https:"+ item.xpath('@href').get()
             yield SeleniumRequest(
             url=next_url,
             callback=self.parse_item_page,
         )
-            # a +=1
-            # if a>1:
-            #     break
+            a +=1
+            if a>1:
+                break
             
 
         
@@ -67,8 +71,8 @@ class ClientSideSpider(scrapy.Spider):
 
     def parse_item_page(self, response):
         driver = response.meta['driver']
-        print("*******************************************")
-
+        print("*************************THE ITEM IS BEING SCRAPED******************")
+        Product = Products()
         # Scroll to the middle of the page
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight / 2);")  # Scroll to the middle
         time.sleep(3)
@@ -76,17 +80,18 @@ class ClientSideSpider(scrapy.Spider):
             rating = driver.find_element(By.CSS_SELECTOR, 'span.score-average').text.strip()
         except Exception as e:
             rating = 'No rating' 
+        Product['name'] = response.css('.pdp-mod-product-badge-title::text').get()
+        Product['price'] = response.css('.pdp-price_size_xl::text').get()
+        Product['rating']=rating
+        Product['no_of_review']= response.css('.pdp-review-summary__link::text').get()
+        Product['delivery_price']= response.css('.delivery-option-item_type_standard .no-subtitle::text').get()
+        Product['seller']= response.css('.seller-name__detail-name::text').get()
+        Product['seller_rating']= response.css('.rating-positive::text').get()
+        Product['delivery_rating' ]= response.css('.info-content:nth-child(2) .seller-info-value::text').get()
+        Product['stock']= response.css('#module_quantity-input input').xpath('@max').get()
+        
+        yield Product
 
-        yield {
-            'name': response.css('.pdp-mod-product-badge-title::text').get(),
-            'price': response.css('.pdp-price_size_xl::text').get(),
-            'delivery_price': response.css('.delivery-option-item_type_standard .no-subtitle::text').get(),
-            'rating':rating,
-            'seller': response.css('.seller-name__detail-name::text').get(),
-            'seller_rating': response.css('.rating-positive::text').get(),
-            'delivery_rating' : response.css('.info-content:nth-child(2) .seller-info-value::text').get(),
-            'stock': response.css('#module_quantity-input input').xpath('@max').get()
-        }
 
 
 
