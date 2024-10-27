@@ -1,5 +1,5 @@
 # Scrapy settings for darazscraper project
-#
+from selenium.webdriver.firefox.options import Options
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
 #
@@ -65,6 +65,15 @@ CONCURRENT_REQUESTS = 1
 ITEM_PIPELINES = {
    "darazscraper.pipelines.DarazscraperPipeline": 300,
 }
+SELENIUM_DRIVER_ARGUMENTS = [
+    '--page-load-strategy=eager',
+    '--disable-site-isolation-trials',
+    '--disable-dev-shm-usage',
+    '--disable-gpu',
+    '--no-sandbox',
+    '--disable-images',
+    '--blink-settings=imagesEnabled=false'
+]
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -96,9 +105,24 @@ FEED_EXPORT_ENCODING = "utf-8"
 
 SELENIUM_DRIVER_NAME = 'chrome'
 SELENIUM_DRIVER_EXECUTABLE_PATH = 'C:/Users/user/Desktop/Repositories/WebScraping/Scrapy/darazscraper/chromedriver.exe'
-SELENIUM_DRIVER_ARGUMENTS = [ '--no-sandbox', '--disable-dev-shm-usage', 'binary_location=C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe']
+SELENIUM_DRIVER_ARGUMENTS = [
+    '--no-sandbox', 
+    '--disable-dev-shm-usage'
+    '--page-load-strategy=eager',
+    '--disable-site-isolation-trials',
+    '--disable-dev-shm-usage',
+    '--disable-gpu',
+    '--no-sandbox',
+    '--disable-images',
+    '--blink-settings=imagesEnabled=false'
+]
 # '--headless',
+SELENIUM_PAGE_LOAD_TIMEOUT = 10
+SELENIUM_SCRIPT_TIMEOUT = 10
 
+# Other common settings you might want to add
+DOWNLOAD_DELAY = 1
+RANDOMIZE_DOWNLOAD_DELAY = True
 
 
 DOWNLOADER_MIDDLEWARES = {

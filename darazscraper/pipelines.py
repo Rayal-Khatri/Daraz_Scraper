@@ -8,8 +8,10 @@ class DarazscraperPipeline:
         rating = adapter.get('rating')
         if rating == 'No rating':
             adapter['rating'] = 0.0 
+        elif rating is not None:
+            adapter['rating'] = float(rating)
         else:
-            adapter['rating'] = float(rating) 
+            adapter['rating'] = 0.0
 
         stock = adapter.get('stock')
         adapter['stock'] = float(stock) if stock is not None else 0.0
@@ -23,9 +25,11 @@ class DarazscraperPipeline:
 
         price_keys= ['price','delivery_price']
         for price_key in price_keys:
-            value = adapter.get(price_key)
-            value = value.replace('Rs.','')
-            adapter[price_key]= float(value)
+            if value is not None:
+                value = value.replace('Rs.', '')
+                adapter[price_key] = float(value)
+            else:
+                adapter[price_key] = 0.0
 
 
         special_ratings = ['delivery_rating', 'seller_rating']
