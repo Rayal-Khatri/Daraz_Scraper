@@ -11,17 +11,6 @@ class ClientSideSpider(scrapy.Spider):
     name = 'daraz_flash_sale'
     allowed_domains = ['https://www.daraz.com.np','www.daraz.com.np','daraz.com.np']  
 
-    custom_settings = {
-        'SELENIUM_DRIVER_ARGUMENTS': [
-            '--page-load-strategy=eager',
-            '--disable-site-isolation-trials',
-            '--disable-dev-shm-usage',
-            '--disable-gpu',
-            '--no-sandbox',
-            '--disable-images',
-            '--blink-settings=imagesEnabled=false'
-        ]
-    }
 
     # Entry point for starting requests
     def start_requests(self):
@@ -51,7 +40,7 @@ class ClientSideSpider(scrapy.Spider):
                 break
 
         
-        # a = 0   # To scrape only 2 items for testing
+        a = 0   # To scrape only 2 items for testing
         current_html = driver.page_source
         current_page_selector = Selector(text=current_html)
         items =  current_page_selector.css('a.flash-unit-a')
@@ -68,10 +57,10 @@ class ClientSideSpider(scrapy.Spider):
                 wait_time=2,
                 callback=self.parse_item_page_callback
             )
-            # # To scrape only 2 items for testing
-            # a +=1
-            # if a>1:
-            #     break
+            # To scrape only 2 items for tessting
+            a +=1
+            if a>100:
+                break
             
 
     def parse_item_page_callback(self, response):

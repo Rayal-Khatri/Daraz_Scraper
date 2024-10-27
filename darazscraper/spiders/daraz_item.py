@@ -13,7 +13,7 @@ class DarazItemSpider(scrapy.Spider):
 
     def start_requests(self):
         url = "https://www.daraz.com.np/catalog/?spm=a2a0e.tm80335409.search.2.28a379e0oo0co0&q="  
-        keyword = input("*****************Enter The search Keywoard****************")    
+        keyword = input("*****************Enter The search Keywoard****************\n")    
         url = url + keyword.replace(' ', '%20')
         # url = "https://www.daraz.com.np/catalog/?page=3&q=chana"  # this code is for testing and is the end of the search result
         yield SeleniumRequest(
@@ -25,13 +25,17 @@ class DarazItemSpider(scrapy.Spider):
         items = []
         driver = response.meta['driver'] 
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight / 1.2);")  # Wait for new content to load
-
+        time.sleep(2)
         # Initial pagination button setup
-        a=0 #setting up a ocunter
+
+        
+        a=0 #setting up a counter
         while True:
             a+=1
-            if a <3:
-                break #stoping the loop at page 3... remove if you want to scrape all the items
+            if a >2:
+                break #stoping the loop at page 2... remove if you want to scrape all the items
+
+
             # Get and parse page source
             current_html = driver.page_source
             current_page_selector = Selector(text=current_html)
