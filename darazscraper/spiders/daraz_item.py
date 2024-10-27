@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from scrapy.selector import Selector 
 import time
+from ..utils import parse_item_page
 
 class DarazItemSpider(scrapy.Spider):
     name = "daraz_item"
@@ -60,36 +61,17 @@ class DarazItemSpider(scrapy.Spider):
             next_url = "https:"+ str(item.css('._95X4G a').xpath('@href').get())
             yield SeleniumRequest(
             url=next_url,
-            callback=self.parse_item_page,
+            callback=self.parse_item_page_callback,
         )
     
     async def errback(self, failure):
         page = failure.request.meta['playwright_page']
         await page.close()
 
-    def parse_item_page(self, response):
+    def parse_item_page_callback(self, response):
         driver = response.meta['driver']
-        print("*******************************************")
-
-        # Scroll to the middle of the page
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight / 2);")  # Scroll to the middle
-        time.sleep(3)
-        try:
-            rating = driver.find_element(By.CSS_SELECTOR, 'span.score-average').text.strip()
-        except Exception as e:
-            rating = 'No rating' 
-
-        yield {
-            'name': response.css('.pdp-mod-product-badge-title::text').get(),
-            'price': response.css('.pdp-price_size_xl::text').get(),
-            'rating':rating,
-            'no_of_rating': response.css('.pdp-review-summary__link::text').get(),
-            'delivery_price': response.css('.delivery-option-item_type_standard .no-subtitle::text').get(),
-            'seller': response.css('.seller-name__detail-name::text').get(),
-            'seller_rating': response.css('.rating-positive::text').get(),
-            'delivery_rating' : response.css('.info-content:nth-child(2) .seller-info-value::text').get(),
-            'stock': response.css('#module_quantity-input input').xpath('@max').get()
-        }
+        product_data = parse_item_page(driver, response)
+        yield product_data
 
 
 

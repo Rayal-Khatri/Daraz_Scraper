@@ -3,10 +3,8 @@ from scrapy_selenium import SeleniumRequest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from ..items import Products
-import time
 from scrapy.selector import Selector 
-
+from ..utils import parse_item_page
 
 
 class ClientSideSpider(scrapy.Spider):
@@ -18,6 +16,8 @@ class ClientSideSpider(scrapy.Spider):
         url = 'https://pages.daraz.com.np/wow/gcp/route/daraz/np/upr/router?hybrid=1&data_prefetch=true&prefetch_replace=1&at_iframe=1&wh_pid=%2Flazada%2Fchannel%2Fnp%2Fflashsale%2FeBQX2YfTXs&hide_h5_title=true&lzd_navbar_hidden=true&disable_pull_refresh=true&skuIds=105485983%2C128126693%2C129619760%2C128294831%2C157857545%2C122148470%2C129575275&spm=a2a0e.tm80335409.FlashSale.d_shopMore'
         yield SeleniumRequest(
             url=url, 
+            wait_until=EC.presence_of_element_located((By.CSS_SELECTOR, 'a.flash-unit-a')),
+            wait_time= 2,
             callback=self.parse, 
         )
 
@@ -29,35 +29,34 @@ class ClientSideSpider(scrapy.Spider):
 
         while True:
             try:
-                # Wait for the "Load More" button to be clickable
-                load_more_button = WebDriverWait(driver, 10).until(
+                load_more_button = WebDriverWait(driver, 5).until(
                     EC.element_to_be_clickable((By.CSS_SELECTOR, 'a.button.J_LoadMoreButton'))
                 )
-                load_more_button.click()  # Click the "Load More" button
-                time.sleep(2)  # Wait for new content to load
+                load_more_button.click()  
 
             except Exception as e:
-                # Break the loop if the button is not found or not clickable
                 print("No more 'Load More' button found or unable to click:", e)
                 break
 
-        # # Now fetch the updated page source after clicking the button
-        # html = driver.page_source
-        # response = scrapy.Selector(text=html)
-        # Logging and yielding the scraped data
-        # self.logger.info(f'Total items after clicking Load More: {len(title)}')
-        # To scrape only 3 items for testing
-        a = 0
+        
+        a = 0   # To scrape only 2 items for testing
         current_html = driver.page_source
         current_page_selector = Selector(text=current_html)
         items =  current_page_selector.css('a.flash-unit-a')
+        
         print("************************************************************** TOTAL ITEMS ="+ str(len(items))+ "********************************************************")
+        
+        
+        # -------------------------------------FOR SCRAPING INDIVIDUAL ITEMS-----------------------------------
         for item in items:
             next_url = "https:"+ item.xpath('@href').get()
             yield SeleniumRequest(
-            url=next_url,
-            callback=self.parse_item_page,
-        )
+                url=next_url,
+                wait_until=EC.presence_of_element_located((By.CSS_SELECTOR, '.pdp-mod-product-badge-title')),
+                wait_time=2,
+                callback=self.parse_item_page_callback
+            )
+            # To scrape only 2 items for testing
             a +=1
             if a>1:
                 break
@@ -69,31 +68,12 @@ class ClientSideSpider(scrapy.Spider):
         page = failure.request.meta['playwright_page']
         await page.close()
 
-    def parse_item_page(self, response):
+   
+
+    def parse_item_page_callback(self, response):
         driver = response.meta['driver']
-        print("*************************THE ITEM IS BEING SCRAPED******************")
-        Product = Products()
-        # Scroll to the middle of the page
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight / 2);")  # Scroll to the middle
-        time.sleep(3)
-        try:
-            rating = driver.find_element(By.CSS_SELECTOR, 'span.score-average').text.strip()
-        except Exception as e:
-            rating = 'No rating' 
-        Product['name'] = response.css('.pdp-mod-product-badge-title::text').get()
-        Product['price'] = response.css('.pdp-price_size_xl::text').get()
-        Product['rating']=rating
-        Product['no_of_review']= response.css('.pdp-review-summary__link::text').get()
-        Product['delivery_price']= response.css('.delivery-option-item_type_standard .no-subtitle::text').get()
-        Product['seller']= response.css('.seller-name__detail-name::text').get()
-        Product['seller_rating']= response.css('.rating-positive::text').get()
-        Product['delivery_rating' ]= response.css('.info-content:nth-child(2) .seller-info-value::text').get()
-        Product['stock']= response.css('#module_quantity-input input').xpath('@max').get()
-        
-        yield Product
-
-
-
+        product_data = parse_item_page(driver, response)
+        yield product_data
 
 
 
