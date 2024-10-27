@@ -24,19 +24,19 @@ class ClientSideSpider(scrapy.Spider):
 
 
     def parse(self, response):
-        # -------------------------------TO LOAD MORE--------------------
         driver = response.meta['driver']
 
-        while True:
-            try:
-                load_more_button = WebDriverWait(driver, 5).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, 'a.button.J_LoadMoreButton'))
-                )
-                load_more_button.click()  
+        # -------------------------------TO LOAD MORE--------------------
+        # while True:
+        #     try:
+        #         load_more_button = WebDriverWait(driver, 5).until(
+        #             EC.element_to_be_clickable((By.CSS_SELECTOR, 'a.button.J_LoadMoreButton'))
+        #         )
+        #         load_more_button.click()  
 
-            except Exception as e:
-                print("No more 'Load More' button found or unable to click:", e)
-                break
+        #     except Exception as e:
+        #         print("No more 'Load More' button found or unable to click:", e)
+        #         break
 
         
         a = 0   # To scrape only 2 items for testing
