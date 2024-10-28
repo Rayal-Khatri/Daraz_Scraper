@@ -65,15 +65,6 @@ CONCURRENT_REQUESTS = 1
 ITEM_PIPELINES = {
    "darazscraper.pipelines.DarazscraperPipeline": 300,
 }
-SELENIUM_DRIVER_ARGUMENTS = [
-    '--page-load-strategy=eager',
-    '--disable-site-isolation-trials',
-    '--disable-dev-shm-usage',
-    '--disable-gpu',
-    '--no-sandbox',
-    '--disable-images',
-    '--blink-settings=imagesEnabled=false'
-]
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

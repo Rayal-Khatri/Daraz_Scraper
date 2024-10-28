@@ -15,7 +15,6 @@ class DarazItemSpider(scrapy.Spider):
         url = "https://www.daraz.com.np/catalog/?spm=a2a0e.tm80335409.search.2.28a379e0oo0co0&q="  
         keyword = input("*****************Enter The search Keywoard****************\n")    
         url = url + keyword.replace(' ', '%20')
-        # url = "https://www.daraz.com.np/catalog/?page=3&q=chana"  # this code is for testing and is the end of the search result
         yield SeleniumRequest(
             url=url, 
             callback=self.parse,  
@@ -24,15 +23,13 @@ class DarazItemSpider(scrapy.Spider):
     def parse(self, response):
         items = []
         driver = response.meta['driver'] 
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight / 1.2);")  # Wait for new content to load
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight / 1.2);") 
         time.sleep(2)
-        # Initial pagination button setup
-
-        
+        n = input("*******Enter number of pages to scrpae [999 for all] (each page has 40 items and takes about 6.1 minutes) ******\n")
         a=0 #setting up a counter
         while True:
             a+=1
-            if a >2:
+            if a >n:
                 break #stoping the loop at page 2... remove if you want to scrape all the items
 
 
@@ -41,9 +38,9 @@ class DarazItemSpider(scrapy.Spider):
             current_page_selector = Selector(text=current_html)
             items.extend(current_page_selector.css('.Bm3ON'))  # Add items from current page
             
-            # print(f"***************************************{len(items)}")
             button = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CLASS_NAME, "ant-pagination-item-link")))
+            
             # Check if next button is available and not disabled
             pagination_button = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, 'li.ant-pagination-next[aria-disabled="false"] button')))

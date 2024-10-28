@@ -18,8 +18,8 @@
 
 - Python 3.6+
 - Chrome browser
-- ChromeDriver (matching your Chrome version)
-- Required Python packages:
+- ChromeDriver (Present in git: needs to match your Chrome version)
+- Required Python packages (Present in virtual environment):
   - Scrapy
   - Selenium
 
@@ -45,21 +45,16 @@
    source venv/bin/activate
    ```
 
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Download ChromeDriver:
+4. Download ChromeDriver (If version doesnt match):
    - Visit [ChromeDriver Downloads](https://sites.google.com/chromium.org/driver/)
    - Select the version matching your Chrome browser
-   - Add ChromeDriver to your system PATH
+   - Update SELENIUM_DRIVER_EXECUTABLE_PATH in settings.py to yout ChromeDriver path
 
 ## Usage
 
 ### Scraping Flash Sale Items
 
-To collect data from Daraz's current flash sale:
+To collect data from Daraz's current flash sale (Inside the darazscraper folder):
 
 ```bash
 scrapy crawl daraz_flash_sale -O flash_sale_data.csv
@@ -67,11 +62,14 @@ scrapy crawl daraz_flash_sale -O flash_sale_data.csv
 
 ### Scraping Search Results
 
-To scrape products based on a search term:
+- To scrape products based on a search term (Inside the darazscraper folder):
 
 ```bash
 scrapy crawl daraz_item -a search_term="laptop" -O laptop_search_data.csv
 ```
+- Enter the name of the product that you want to search 
+- Enter the number of pages you want to scrape.( Each page has 40 items and it takes about 6.1 minutes)
+
 
 ### Output Formats
 
@@ -90,32 +88,34 @@ The spiders can be customized in their respective files:
 - `spiders/daraz_flash_sale.py`
 - `spiders/daraz_item.py`
 
-Common customizations include:
-- Adding new fields to scrape
-- Modifying parsing logic
-- Implementing filters
 
 ### Settings Configuration
 
-Adjust scraping behavior in `settings.py`:
-
-```python
-# Example settings
-DOWNLOAD_DELAY = 2  # Time between requests
-ROBOTSTXT_OBEY = True
-SELENIUM_DRIVER_ARGUMENTS = ['--headless']  # Run in headless mode
+SELENIUM_DRIVER_ARGUMENTS = [
+    '--no-sandbox', 
+    '--disable-dev-shm-usage'
+    '--page-load-strategy=eager',
+    '--disable-site-isolation-trials',
+    '--disable-dev-shm-usage',
+    '--disable-gpu',
+    '--no-sandbox',
+    '--disable-images',
+    '--blink-settings=imagesEnabled=false'
+]
+- Add '--headless' to run in headless mode ie without the browser
 ```
 
 ## Data Structure
 
 The scraped data includes:
 - Product name
-- Price (current and original)
+- Price
 - Discount percentage
-- Rating and review count
+- Rating
+- Review count
 - Seller information
 - Stock status
-- Delivery options
+- Delivery Price
 
 ## Contributing
 
