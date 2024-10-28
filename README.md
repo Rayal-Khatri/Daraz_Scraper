@@ -9,10 +9,6 @@
 - **Dual Spider System:**
   - `daraz_flash_sale`: Dedicated spider for flash sale items
   - `daraz_item`: Flexible spider for general product search
-- **Data Collection:** Comprehensive product details including prices, ratings, and availability
-- **Output Flexibility:** CSV output by default with database storage options
-- **Dynamic Content Handling:** Uses Selenium for JavaScript-rendered content
-- **Customizable Settings:** Configurable timeouts and page load strategies
 
 ## Prerequisites
 
@@ -51,24 +47,26 @@
    - Update SELENIUM_DRIVER_EXECUTABLE_PATH in settings.py to yout ChromeDriver path
 
 ## Usage
+Make sure you are inside the darazscraper folder 
 
 ### Scraping Flash Sale Items
 
-To collect data from Daraz's current flash sale (Inside the darazscraper folder):
+To collect data from Daraz's current flash sale (Might take about 40 minutes):
 
 ```bash
-scrapy crawl daraz_flash_sale -O flash_sale_data.csv
+scrapy crawl daraz_flash_sale -O <'dataset name'>.<'extension'>
 ```
 
 ### Scraping Search Results
 
-- To scrape products based on a search term (Inside the darazscraper folder):
+- To scrape products based on a search term:
 
 ```bash
-scrapy crawl daraz_item -a search_term="laptop" -O laptop_search_data.csv
+scrapy crawl daraz_item -O <'dataset name'>.<'extension'>
 ```
 - Enter the name of the product that you want to search 
 - Enter the number of pages you want to scrape.( Each page has 40 items and it takes about 6.1 minutes)
+- Enter 999 to scrape all of the products
 
 
 ### Output Formats
@@ -91,6 +89,7 @@ The spiders can be customized in their respective files:
 
 ### Settings Configuration
 
+```
 SELENIUM_DRIVER_ARGUMENTS = [
     '--no-sandbox', 
     '--disable-dev-shm-usage'
@@ -102,8 +101,9 @@ SELENIUM_DRIVER_ARGUMENTS = [
     '--disable-images',
     '--blink-settings=imagesEnabled=false'
 ]
-- Add '--headless' to run in headless mode ie without the browser
 ```
+- Add '--headless' to run in headless mode (Without the browser)
+
 
 ## Data Structure
 
