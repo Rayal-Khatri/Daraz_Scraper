@@ -44,7 +44,7 @@
 4. Download ChromeDriver (If version doesnt match):
    - Visit [ChromeDriver Downloads](https://sites.google.com/chromium.org/driver/)
    - Select the version matching your Chrome browser
-   - Update SELENIUM_DRIVER_EXECUTABLE_PATH in settings.py to yout ChromeDriver path
+   - ⚠️ **Important:** Update SELENIUM_DRIVER_EXECUTABLE_PATH in settings.py to yout ChromeDriver path
 
 ## Usage
 Make sure you are inside the darazscraper folder 
