@@ -27,7 +27,7 @@
    ```
 
 2. Set up virtual environment:
-
+ The cloned file already has the required Virtual environment with all installed dependencies. It is required to activate the environment
    **Windows:**
    ```bash
    .\venv\Scripts\activate
