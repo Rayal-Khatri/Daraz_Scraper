@@ -1,4 +1,4 @@
-q# DarazScraper
+# DarazScraper
 
 ## Overview
 
