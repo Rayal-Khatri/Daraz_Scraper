@@ -29,7 +29,7 @@ class DarazItemSpider(scrapy.Spider):
         a=0 #setting up a counter
         while True:
             a+=1
-            if a >n:
+            if a >int(n):
                 break #stoping the loop at page 2... remove if you want to scrape all the items
 
 
