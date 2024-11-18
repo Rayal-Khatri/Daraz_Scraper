@@ -24,7 +24,6 @@
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/DarazScraper.git
-   cd DarazScraper
    ```
 
 2. Set up virtual environment:
@@ -51,6 +50,9 @@
 
 ## Usage
 Make sure you are inside the darazscraper folder 
+```bash
+cd DarazScraper
+   ```
 
 ### Scraping Flash Sale Items
 
