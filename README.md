@@ -45,6 +45,9 @@
    - Visit [ChromeDriver Downloads](https://sites.google.com/chromium.org/driver/)
    - Select the version matching your Chrome browser
    - ⚠️ **Important:** Update SELENIUM_DRIVER_EXECUTABLE_PATH in settings.py to yout ChromeDriver path
+  
+     ![Replace Code here](https://drive.google.com/uc?id=1pWlTstacCMfH2AHCNFlkWQVx6ej16xo9 "Code Replace")
+
 
 ## Usage
 Make sure you are inside the darazscraper folder 
