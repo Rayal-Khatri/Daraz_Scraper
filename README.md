@@ -26,17 +26,16 @@
    git clone https://github.com/yourusername/DarazScraper.git
    ```
 
-2. Set up virtual environment:
+2. **Set up virtual environment**: The cloned file already has the required Virtual environment with all installed dependencies. It is required to activate the environment
+
 
    **Windows:**
    ```bash
-   python -m venv venv
    .\venv\Scripts\activate
    ```
 
    **macOS/Linux:**
    ```bash
-   python -m venv venv
    source venv/bin/activate
    ```
 
@@ -61,6 +60,10 @@ To collect data from Daraz's current flash sale (Might take about 40 minutes):
 ```bash
 scrapy crawl daraz_flash_sale -O <'dataset name'>.<'extension'>
 ```
+For Example
+```bash
+scrapy crawl daraz_flash_sale -O dataset_flash.csv
+```
 
 ### Scraping Search Results
 
@@ -69,6 +72,13 @@ scrapy crawl daraz_flash_sale -O <'dataset name'>.<'extension'>
 ```bash
 scrapy crawl daraz_item -O <'dataset name'>.<'extension'>
 ```
+
+For Example
+```bash
+scrapy crawl daraz_flash_sale -O dataset_search.csv
+```
+
+
 - Enter the name of the product that you want to search 
 - Enter the number of pages you want to scrape.( Each page has 40 items and it takes about 6.1 minutes)
 - Enter 999 to scrape all of the products
