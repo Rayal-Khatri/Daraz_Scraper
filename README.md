@@ -38,7 +38,10 @@
    ```bash
    source venv/bin/activate
    ```
-
+    Install the dependencies from requirements.txt
+    ````bash
+    pip install -r requirements.txt
+    ````
 4. Download ChromeDriver (If version doesnt match):
    - Visit [ChromeDriver Downloads](https://sites.google.com/chromium.org/driver/)
    - Select the version matching your Chrome browser
